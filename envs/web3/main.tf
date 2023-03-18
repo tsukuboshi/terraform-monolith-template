@@ -587,57 +587,30 @@ module "alb_tgec2_1c" {
   instance_id      = module.ec2_1c_instance.instance_id
 }
 
-# module "iam_backup_policy" {
-#   source                         = "../../modules/iammanagedpolicy"
-#   iam_role_policy_arn            = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
-# }
+module "iam_backup_policy" {
+  source              = "../../modules/iammanagedpolicy"
+  iam_role_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+}
 
-# module "iam_backup_role" {
-#   source                         = "../../modules/iamrole"
-#   system                         = var.system
-#   project                        = var.project
-#   environment                    = var.environment
-#   resourcetype                   = var.service_rsrc_type_backup
-#   iam_role_principal_identifiers = "backup.amazonaws.com"
-#   iam_policy_arn                 = module.iam_backup_policy.iam_policy_arn
-# }
+module "iam_backup_role" {
+  source                         = "../../modules/iamrole"
+  system                         = var.system
+  project                        = var.project
+  environment                    = var.environment
+  resourcetype                   = var.service_rsrc_type_backup
+  iam_role_principal_identifiers = "backup.amazonaws.com"
+  iam_policy_arn                 = module.iam_backup_policy.iam_policy_arn
+}
 
-# module "ec2_backup" {
-#   source          = "../../modules/ec2backup"
-#   system          = var.system
-#   project         = var.project
-#   environment     = var.environment
-#   backup_role_arn = module.iam_backup_role.iam_role_arn
-#   instance_1a_arn = module.ec2_1a_instance.instance_arn
-#   instance_1c_arn = module.ec2_1c_instance.instance_arn
-# }
-
-# module "autoscailing" {
-#   source                      = "../../modules/autoscailing"
-#   system                      = var.system
-#   project                     = var.project
-#   environment                 = var.environment
-#   resourcetype                = var.instance_rsrc_type_web
-#   internal                    = var.internal
-#   instance_type               = var.instance_type
-#   private_1a_subnet_id        = module.private_1a_subnet.subnet_id
-#   private_1c_subnet_id        = module.private_1c_subnet.subnet_id
-#   security_group_id           = module.ec2_sg.security_group_id
-#   ami_image_id                = module.ami.ami_image_id
-#   associate_public_ip_address = var.has_public_ip_to_computer
-#   instance_profile            = module.iam_instance_profile.instance_profile
-#   # key_pair_id                 = module.keypair.key_pair_id
-#   user_data_file       = var.user_data_file
-#   ebs_volume_size      = var.ebs_volume_size
-#   ebs_volume_type      = var.ebs_volume_type
-#   ebs_encrypted        = var.ebs_encrypted
-#   outbound_1a_route_id = module.public_1a_natgateway.internet_route_id
-#   outbound_1c_route_id = module.public_1c_natgateway.internet_route_id
-#   target_group_arn     = module.alb_tg.alb_tg_arn
-#   asg_desired_capacity = var.asg_desired_capacity
-#   asg_min_size         = var.asg_min_size
-#   asg_max_size         = var.asg_max_size
-# }
+module "ec2_backup" {
+  source          = "../../modules/ec2backup"
+  system          = var.system
+  project         = var.project
+  environment     = var.environment
+  backup_role_arn = module.iam_backup_role.iam_role_arn
+  instance_1a_arn = module.ec2_1a_instance.instance_arn
+  instance_1c_arn = module.ec2_1c_instance.instance_arn
+}
 
 module "iam_rds_policy" {
   source              = "../../modules/iammanagedpolicy"
