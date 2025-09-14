@@ -1,0 +1,9 @@
+# AL2023最新AMI ID取得コマンド
+aws ssm get-parameter --name "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64"
+
+# PostgreSQL接続用コマンド
+echo DB_HOST=<DBホスト名>
+echo DB_DATABASE_NAME=<DBデータベース名>
+echo DB_ROOT_USER_NAME=<DBルートユーザー名>
+
+psql --host=${DB_HOST} --port=5432 --dbname=${DB_DATABASE_NAME} --username=${DB_ROOT_USER_NAME}
