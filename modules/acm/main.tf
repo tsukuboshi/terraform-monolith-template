@@ -18,6 +18,7 @@ resource "aws_acm_certificate" "tf_acm_alb_cert" {
   }
 
   lifecycle {
+    # 現在使用中の証明書を置き換える作業が妨げられてしまう現象を回避するための設定
     create_before_destroy = true
   }
 

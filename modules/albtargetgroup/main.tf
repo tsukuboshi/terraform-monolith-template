@@ -26,6 +26,7 @@ resource "aws_lb_target_group" "tf_alb_tg" {
   }
 
   lifecycle {
+    # ターゲットグループがリスナーとして登録されている場合に、設定変更による再生成が妨げられてしまう現象を回避するための設定
     create_before_destroy = true
     ignore_changes        = [name]
   }
